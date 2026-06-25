@@ -1224,7 +1224,8 @@ drawCanvas.addEventListener('pointermove', (e)=>{
     const scaleW = window.innerWidth  / NATIVE_W;
     const scaleH = window.innerHeight / NATIVE_H;
     mapBaseScale = Math.min(scaleW, scaleH);
-    // Center the map on screen
+    // Start zoomed out so full map is visible centered
+    mapZoom = 0.75;
     mapPanX = (window.innerWidth  - NATIVE_W * mapBaseScale * mapZoom) / 2;
     mapPanY = (window.innerHeight - NATIVE_H * mapBaseScale * mapZoom) / 2;
   }
@@ -1355,7 +1356,7 @@ drawCanvas.addEventListener('pointermove', (e)=>{
   },{passive:false});
 
   window.addEventListener('resize', ()=>{
-    mapZoom = 1;
+    mapZoom = 0.75;
     fit();
     clampPan();
     applyTransform();
