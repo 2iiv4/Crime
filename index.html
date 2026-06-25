@@ -1234,13 +1234,10 @@ drawCanvas.addEventListener('pointermove', (e)=>{
   function clampPan(){
     const visW = NATIVE_W  * mapBaseScale * mapZoom;
     const visH = NATIVE_H  * mapBaseScale * mapZoom;
-    // If map smaller than screen: center it
-    if(visW <= window.innerWidth){
-      mapPanX = (window.innerWidth - visW) / 2;
-    } else {
-      // Map larger than screen: clamp so no empty space on either side
-      mapPanX = Math.min(0, Math.max(window.innerWidth - visW, mapPanX));
-    }
+    const extraSpace = window.innerWidth * 0.5; // half screen of free space on each side
+    // X: allow panning to show empty space
+    mapPanX = Math.min(extraSpace, Math.max(window.innerWidth - visW - extraSpace, mapPanX));
+    // Y: same
     if(visH <= window.innerHeight){
       mapPanY = (window.innerHeight - visH) / 2;
     } else {
