@@ -1025,7 +1025,7 @@ function initFirebase(){
 const MY_ID = Math.random().toString(36).slice(2);
 
 const MAP_NATIVE_W = 3392, MAP_NATIVE_H = 4178;
-let mapZoom = 1, mapPanX = 0, mapPanY = 0, mapBaseScale = 1;
+let mapZoom = 0.75, mapPanX = 0, mapPanY = 0, mapBaseScale = 1;
 
 function screenToMapFrac(sx, sy){
   const s = mapBaseScale * mapZoom;
@@ -1224,8 +1224,6 @@ drawCanvas.addEventListener('pointermove', (e)=>{
     const scaleW = window.innerWidth  / NATIVE_W;
     const scaleH = window.innerHeight / NATIVE_H;
     mapBaseScale = Math.min(scaleW, scaleH);
-    // Start zoomed out so full map is visible centered
-    mapZoom = 0.75;
     mapPanX = (window.innerWidth  - NATIVE_W * mapBaseScale * mapZoom) / 2;
     mapPanY = (window.innerHeight - NATIVE_H * mapBaseScale * mapZoom) / 2;
   }
@@ -1267,7 +1265,11 @@ drawCanvas.addEventListener('pointermove', (e)=>{
     mapPlaceholder.style.opacity = '0';
   }, { once:true });
   mapImage.addEventListener('error', ()=>{
-    loadingDiv.textContent = 'Map failed to load.';
+    // map.webp not found — show placeholder unblurred as fallback
+    loadingDiv.style.display = 'none';
+    mapPlaceholder.style.filter = 'none';
+    mapPlaceholder.style.opacity = '1';
+    mapImage.style.opacity = '0';
   });
   mapImage.src = MAP_SRC;
 
