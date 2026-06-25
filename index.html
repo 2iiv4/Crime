@@ -1224,6 +1224,9 @@ drawCanvas.addEventListener('pointermove', (e)=>{
     const scaleW = window.innerWidth  / NATIVE_W;
     const scaleH = window.innerHeight / NATIVE_H;
     mapBaseScale = Math.min(scaleW, scaleH);
+    // Zoom so map fills the screen width on mobile
+    const fillScale = window.innerWidth / (NATIVE_W * mapBaseScale);
+    mapZoom = Math.min(fillScale, 1.5); // cap at 1.5x to avoid too much zoom
     mapPanX = (window.innerWidth  - NATIVE_W * mapBaseScale * mapZoom) / 2;
     mapPanY = (window.innerHeight - NATIVE_H * mapBaseScale * mapZoom) / 2;
   }
@@ -1246,7 +1249,8 @@ drawCanvas.addEventListener('pointermove', (e)=>{
   }
 
   function applyTransform(){
-    const t = `translate(${mapPanX}px,${mapPanY}px) scale(${mapBaseScale * mapZoom})`;
+    const s = mapBaseScale * mapZoom;
+    const t = `translate(${mapPanX}px,${mapPanY}px) scale(${s})`;
     mapImage.style.transform       = t;
     mapPlaceholder.style.transform = t;
     scheduleRedrawStrokes();
@@ -1358,7 +1362,6 @@ drawCanvas.addEventListener('pointermove', (e)=>{
   },{passive:false});
 
   window.addEventListener('resize', ()=>{
-    mapZoom = 0.75;
     fit();
     clampPan();
     applyTransform();
